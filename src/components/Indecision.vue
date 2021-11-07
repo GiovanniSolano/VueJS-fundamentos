@@ -31,11 +31,18 @@ export default {
     methods: {
         async getAnswer() {
 
-            // No catch aun
-            this.answer = "Pensando..."
-            const {answer, image} = await fetch('https://yesno.wtf/api').then(r => r.json());
-            this.answer = answer == 'yes' ? 'Si!' : 'No!';
-            this.img = image;
+            try {
+                this.answer = "Pensando..."
+                const {answer, image} = await fetch('https://yesno.wtf/api').then(r => r.json());
+                this.answer = answer == 'yes' ? 'Si!' : 'No!';
+                this.img = image;
+
+            } catch (error) {
+                console.log('Indecision error', error);
+                this.answer = 'No se pudo cargar el API',
+                this.img = null;
+                
+            }
 
         }
     },
@@ -43,6 +50,7 @@ export default {
         question(value, oldValue) {
             
             this.isValidQuestion = false
+            console.log({value});
             if(!value.includes('?')) return;
             this.getAnswer();
             this.isValidQuestion = true
